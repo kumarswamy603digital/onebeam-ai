@@ -7,7 +7,7 @@ import { ExecutionLogs } from "@/components/ExecutionLogs";
 import { ToolCallDisplay } from "@/components/ToolCallDisplay";
 import { StructuredOutput } from "@/components/StructuredOutput";
 import { PhaseIndicator } from "@/components/PhaseIndicator";
-
+import { OnebeamLogo } from "@/components/OnebeamLogo";
 const EXAMPLE_PROMPTS = [
   "Create a workflow that marks overdue tasks as urgent",
   "List all current tasks",
@@ -91,14 +91,14 @@ const Index = () => {
       <header className="border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between mb-4">
-            <div>
-              <h1 className="text-2xl font-bold">
-                <span className="text-gradient-primary">Onebeam</span>
-                <span className="text-foreground/60 font-normal ml-2 text-lg">Agent Runtime</span>
-              </h1>
-              <p className="text-xs font-mono text-muted-foreground mt-1">
-                Model-Agnostic · Tool-Safe · Structured Output · Two-Phase Flow
-              </p>
+            <div className="flex items-center gap-4">
+              <OnebeamLogo size="md" />
+              <div>
+                <span className="text-foreground/60 font-normal text-lg">Agent Runtime</span>
+                <p className="text-xs font-mono text-muted-foreground">
+                  Model-Agnostic · Tool-Safe · Structured Output · Two-Phase Flow
+                </p>
+              </div>
             </div>
             <PhaseIndicator phase={currentPhase} isRunning={isRunning} />
           </div>
