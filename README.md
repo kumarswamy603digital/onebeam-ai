@@ -188,10 +188,10 @@ Regardless of how each model returns data, adapters produce identical `Structure
 ```typescript
 interface StructuredResult {
   success: boolean;
-  data: Record<string, unknown>;  // Validated structured output
-  toolCalls: ToolCall[];          // Normalized tool invocations
-  reasoning?: string;             // Model's chain-of-thought
-  rawOutput?: string;             // Original response (for debugging)
+  data: Record<string, unknown>;  
+  toolCalls: ToolCall[];          
+  reasoning?: string;             
+  rawOutput?: string;             
 }
 ```
 
