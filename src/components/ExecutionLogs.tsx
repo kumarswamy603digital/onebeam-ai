@@ -1,4 +1,4 @@
-import type { LogEntry } from "@/core/types";
+  import type { LogEntry } from "@/core/types";
 import { cn } from "@/lib/utils";
 
 const typeStyles: Record<string, string> = {
