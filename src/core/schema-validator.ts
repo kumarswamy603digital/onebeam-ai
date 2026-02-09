@@ -1,4 +1,4 @@
-import type { JSONSchema, ValidationResult } from "./types";
+  import type { JSONSchema, ValidationResult } from "./types";
 
 /**
  * Validates data against a JSON schema.
