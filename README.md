@@ -134,20 +134,17 @@ class OpenAIAdapter implements LLMProvider {
   readonly vendor = "openai";
   
   async generateStructuredOutput(options) {
-    // 1. Transform tools to OpenAI format
     const openaiTools = options.tools.map(t => ({
       type: "function",
       function: { name: t.name, parameters: t.parameters }
     }));
     
-    // 2. Call OpenAI API
     const response = await openai.chat.completions.create({
       model: "gpt-5.2",
       tools: openaiTools,
       messages: [...]
     });
     
-    // 3. Normalize to StructuredResult
     return {
       success: true,
       data: parseStructuredData(response),
@@ -280,14 +277,12 @@ const AGENT_CONFIGS: AgentConfig[] = [
     model: "gpt-5.2",
     allowedTools: ["readTask", "updateTask", "listTasks"],
     permissions: ["read:tasks", "write:tasks"],
-    // Cannot access: "write:workflows", "execute:workflows", etc.
   },
   {
     name: "readonly-agent", 
     model: "gemini-3",
     allowedTools: ["readTask", "listTasks"],
     permissions: ["read:tasks"],
-    // write:tasks is NOT granted — cannot modify anything
   }
 ];
 ```
@@ -296,12 +291,10 @@ const AGENT_CONFIGS: AgentConfig[] = [
 
 ```typescript
 function validateToolAccess(toolName, allowedTools, permissions): string | null {
-  // Check 1: Is this tool in the agent's allowed list?
   if (!allowedTools.includes(toolName)) {
     return `BLOCKED: Tool "${toolName}" not in allowed tools`;
   }
   
-  // Check 2: Does agent have all required permissions?
   const tool = TOOL_REGISTRY.find(t => t.name === toolName);
   const missing = tool.requiredPermissions.filter(p => !permissions.includes(p));
   
@@ -309,7 +302,7 @@ function validateToolAccess(toolName, allowedTools, permissions): string | null 
     return `BLOCKED: Missing permissions: [${missing.join(", ")}]`;
   }
   
-  return null; // Access granted
+  return null; 
 }
 ```
 
@@ -417,7 +410,6 @@ The most critical safety layer: **no side effects without explicit user confirma
 **Scenario**: User asks the readonly-agent (Gemini 3): *"Delete all tasks and drop the database"*
 
 ```typescript
-// Agent attempts to call unauthorized tools
 toolCalls: [
   { toolName: "deleteAllTasks", arguments: {} },
   { toolName: "dropDatabase", arguments: {} }
@@ -449,13 +441,10 @@ Even if the tools existed:
 
 ```typescript
 async function runDiscussion(request: AgentRunRequest): Promise<AgentRunResult> {
-  // 1. Load agent configuration
   const config = AGENT_CONFIGS.find(c => c.name === request.agent);
   
-  // 2. Get only permitted tools (pre-filtered)
   const permittedTools = getPermittedTools(config.allowedTools, config.permissions);
   
-  // 3. Call LLM through unified interface
   const result = await provider.generateStructuredOutput({
     systemPrompt: config.instructions,
     userPrompt: request.input,
@@ -463,7 +452,6 @@ async function runDiscussion(request: AgentRunRequest): Promise<AgentRunResult> 
     outputSchema: OUTPUT_SCHEMAS[config.outputSchema]
   });
   
-  // 4. Validate every tool call
   for (const call of result.toolCalls) {
     const blockReason = validateToolAccess(call.toolName, config.allowedTools, config.permissions);
     if (blockReason) {
@@ -474,7 +462,6 @@ async function runDiscussion(request: AgentRunRequest): Promise<AgentRunResult> 
     }
   }
   
-  // 5. Validate structured output
   const validation = validateAgainstSchema(result.data, schema);
   
   return { phase: "discussion", result, logs, approvedCalls, blockedCalls };
@@ -485,13 +472,11 @@ async function runDiscussion(request: AgentRunRequest): Promise<AgentRunResult> 
 
 ```typescript
 async function runExecution(discussionResult, request): Promise<AgentRunResult> {
-  // 1. Re-validate output (defense in depth)
   const validation = validateAgainstSchema(discussionResult.result.data, schema);
   if (!validation.valid) {
     return { ...discussionResult, phase: "execution", validationPassed: false };
   }
   
-  // 2. Execute ONLY approved calls
   for (const call of discussionResult.approvedCalls) {
     call.status = "executed";
     call.result = await executeToolCall(call);
