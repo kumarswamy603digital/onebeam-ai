@@ -1,4 +1,4 @@
-import type { ToolDefinition, Permission, JSONSchema } from "./types";
+   import type { ToolDefinition, Permission, JSONSchema } from "./types";
 
 // ==========================================
 // Tool Registry — defines available tools
