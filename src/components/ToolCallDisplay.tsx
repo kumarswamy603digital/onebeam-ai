@@ -1,4 +1,4 @@
-import type { ToolCall } from "@/core/types";
+  import type { ToolCall } from "@/core/types";
 import { cn } from "@/lib/utils";
 
 interface ToolCallDisplayProps {
