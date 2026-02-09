@@ -1,4 +1,4 @@
-import type { Phase } from "@/core/types";
+  import type { Phase } from "@/core/types";
 import { cn } from "@/lib/utils";
 
 interface PhaseIndicatorProps {
