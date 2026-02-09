@@ -612,7 +612,3 @@ Onebeam AI Agent Runtime demonstrates a production-ready approach to multi-model
 
 ---
 
-## License
-
-MIT License - See LICENSE file for details.
-
