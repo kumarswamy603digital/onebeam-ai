@@ -1,4 +1,4 @@
-interface OnebeamLogoProps {
+  interface OnebeamLogoProps {
   size?: "sm" | "md" | "lg";
   showText?: boolean;
   className?: string;
