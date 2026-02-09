@@ -128,7 +128,6 @@ Each adapter implements this interface, translating:
 ### Adapter Implementation Pattern
 
 ```typescript
-// Example: OpenAI Adapter (simplified)
 class OpenAIAdapter implements LLMProvider {
   readonly modelId = "gpt-5.2";
   readonly vendor = "openai";
@@ -171,8 +170,8 @@ All tools are defined once using a vendor-agnostic schema:
 interface ToolDefinition {
   name: string;
   description: string;
-  parameters: JSONSchema;          // Standard JSON Schema
-  requiredPermissions: Permission[]; // Onebeam permission system
+  parameters: JSONSchema;          
+  requiredPermissions: Permission[]; 
 }
 ```
 
